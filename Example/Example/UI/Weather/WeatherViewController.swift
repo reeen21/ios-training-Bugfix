@@ -46,12 +46,13 @@ class WeatherViewController: UIViewController {
         self.activityIndicator.startAnimating()
         weatherModel.fetchWeather(at: "tokyo", date: Date()) { result in
             DispatchQueue.main.async {
-                self.activityIndicator.stopAnimating()
                 self.handleWeather(result: result)
             }
         }
-        disasterModel.fetchDisaster { (disaster) in
-            self.disasterLabel.text = disaster
+        DispatchQueue.main.async {
+            self.disasterModel.fetchDisaster { (disaster) in
+                self.disasterLabel.text = disaster
+            }
         }
     }
     
@@ -63,17 +64,7 @@ class WeatherViewController: UIViewController {
             self.maxTempLabel.text = String(response.maxTemp)
             
         case .failure(let error):
-            let message: String
-            switch error {
-            case .jsonEncodeError:
-                message = "Jsonエンコードに失敗しました。"
-            case .jsonDecodeError:
-                message = "Jsonデコードに失敗しました。"
-            case .unknownError:
-                message = "エラーが発生しました。"
-            }
-            
-            let alertController = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Error", message: error.errorDescription, preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: "OK", style: .default) { _ in
                 self.dismiss(animated: true) {
                     print("Close ViewController by \(alertController)")
@@ -81,6 +72,7 @@ class WeatherViewController: UIViewController {
             })
             self.present(alertController, animated: true, completion: nil)
         }
+        self.activityIndicator.stopAnimating()
     }
 }
 
