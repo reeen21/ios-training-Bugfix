@@ -13,7 +13,6 @@ enum WeatherError: Error {
     case jsonDecodeError
     case unknownError
     case invalidParameterError
-    case aaa
 }
 
 extension WeatherError: LocalizedError {
@@ -27,8 +26,6 @@ extension WeatherError: LocalizedError {
             "Unknown error occurred."
         case .invalidParameterError:
             "Invalid parameter error occurred."
-        case .aaa:
-            "sss"
         }
     }
 }
